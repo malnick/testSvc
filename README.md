@@ -12,14 +12,14 @@ Update ~/.testSvc/test.json with whatever you want to send.
 
 Ex: Emulate a local elasticsearch query:
 
-1. ./testSvc -p 9200 -r "/_search?pretty
+1. ./testSvc -p 9200 -r "/_search
 1. curl http://localhost:9200/_search
 
 ## Manpage
 
 NAME
 
-testSvc  -- Quickly build local test servers
+testSvc  -- Quickly build local test servers to mimic an arbitrary service
 
 SYNOPSIS
 
