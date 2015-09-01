@@ -1,7 +1,8 @@
 package main
 
 import (
-	//"encoding/json"
+	"flag"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
@@ -11,14 +12,30 @@ import (
 
 var home = os.Getenv("HOME")
 var testJson = strings.Join([]string{home, "/.testSvc/test.json"}, "")
+var route = flag.String("r", "/", "The local route.")
+var port = flag.String("p", "1234", "The local port.")
+var verbose = flag.Bool("v", false, "Verbosity.")
 
-func response(rw http.ResponseWriter, request *http.Request) {
-	json, _ := ioutil.ReadFile(testJson)
+func response(resp http.ResponseWriter, request *http.Request) {
+	log.Info(request)
+	json, err := ioutil.ReadFile(testJson)
+	if err != nil {
+		panic(err)
+	}
 	log.Info(string(json))
-	rw.Write([]byte(json))
+	resp.Write([]byte(json))
 }
 
 func main() {
-	http.HandleFunc("/testSvc", response)
-	http.ListenAndServe(":12345", nil)
+	flag.Parse()
+	if *verbose {
+		log.SetLevel(log.DebugLevel)
+		log.Debug("Loglevel: Debug")
+	} else {
+		log.SetLevel(log.InfoLevel)
+		log.Info("Loglevel: Info")
+	}
+	log.Info("testSvc starting up: ", "http://localhost:", *port, *route)
+	http.HandleFunc(*route, response)
+	http.ListenAndServe(fmt.Sprintf(":%s", *port), nil)
 }
