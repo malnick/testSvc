@@ -17,12 +17,12 @@ var port = flag.String("p", "1234", "The local port.")
 var verbose = flag.Bool("v", false, "Verbosity.")
 
 func response(resp http.ResponseWriter, request *http.Request) {
-	log.Info(request)
+	log.Debug(request)
 	json, err := ioutil.ReadFile(testJson)
 	if err != nil {
 		panic(err)
 	}
-	log.Info(string(json))
+	log.Debug("Sending :\n", string(json))
 	resp.Write([]byte(json))
 }
 
